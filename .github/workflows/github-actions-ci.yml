@@ -24,6 +24,42 @@ jobs:
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
+      
+      - name: Setup Java JDK
+        uses: actions/setup-java@v2.2.0
+        with:
+          # The Java version to set up. Takes a whole or semver Java version. See examples of supported syntax in README file
+          java-version: '11'
+          # Java distribution. See the list of supported distributions in README file
+          distribution: 
+          
+      - name: befor cache
+        run: |
+          rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
+          rm -fr $HOME/.gradle/caches/*/plugin-resolution/
+          rm -fr $HOME/.gradle/caches/*/scripts/
+          
+      - name: cache
+        uses: actions/cache@v2
+        with:
+          path: |
+            $HOME/.gradle/caches/
+            $HOME/.gradle/wrapper/
+            $HOME/.sonar/cache
+          key: '${{ runner.os }}-${{ hashFiles(''TODO'') }}'
+          
+      - name: install python
+        run: |
+          pyenv versions
+          pyenv global 3.6.7
+          python --version
+          pip3 install --upgrade pip
+          pip3 install liac-arff numpy scipy scikit-learn tpot pandas xgboost
+      
+      - name: run travis runtests
+        run: |
+          echo $TEST_PROJECT
+          ./.travis_runtests.sh
 
       # Runs a single command using the runners shell
       - name: Run a one-line script
