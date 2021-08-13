@@ -53,6 +53,7 @@ jobs:
         
       - name: Setup Python packages
         run: |
+          pip install pyenv
           pyenv versions
           pyenv global 3.6.7
           python --version
