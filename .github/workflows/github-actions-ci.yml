@@ -47,15 +47,14 @@ jobs:
             $HOME/.gradle/wrapper/
             $HOME/.sonar/cache
           key: '${{ runner.os }}-${{ hashFiles(''TODO'') }}'
-      
-      - name: Setup Python
+          
+      - name: Install Python
         uses: actions/setup-python@v2.2.2
-        
-      - name: Setup Python packages
+        with:
+          python-version: 3.6.7
+      
+      - name: Python Packages
         run: |
-          pip install pyenv
-          pyenv versions
-          pyenv global 3.6.7
           python --version
           pip3 install --upgrade pip
           pip3 install liac-arff numpy scipy scikit-learn tpot pandas xgboost
