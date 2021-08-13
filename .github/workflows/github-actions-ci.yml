@@ -31,7 +31,7 @@ jobs:
           # The Java version to set up. Takes a whole or semver Java version. See examples of supported syntax in README file
           java-version: '11'
           # Java distribution. See the list of supported distributions in README file
-          distribution: 
+          distribution: 'zulu' #TODO: check later
           
       - name: befor cache
         run: |
@@ -60,13 +60,16 @@ jobs:
         run: |
           echo $TEST_PROJECT
           ./.travis_runtests.sh
-
-      # Runs a single command using the runners shell
-      - name: Run a one-line script
-        run: echo Hello, world!
-
-      # Runs a set of commands using the runners shell
-      - name: Run a multi-line script
+          
+      - name: dummy
         run: |
-          echo Add other actions to build,
-          echo test, and deploy your project.
+          ./.verifydummybuild.sh
+          echo "Dummy build finished"
+          
+      - name: check_build # TODO not finished!
+        run: |
+          ./gradlew compileJava
+          ./gradlew testClasses
+          git fetch --no-tags --unshallow https://github.com/fmohr/AILibs.git +master:refs/heads/master
+          git fetch --no-tags https://github.com/fmohr/AILibs.git +dev:refs/heads/dev
+          ./gradlew sonarqube -x test
